@@ -143,6 +143,6 @@ while True:
     else:
         print('opço invalida!')
 
-
+   input('Pressione Enter para sair..')
 
 
