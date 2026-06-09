@@ -17,9 +17,9 @@ def cadastrar_produto():
     cursor.execute('''
     insert into estoque
     (modelo, tamanho, fornecedor_id, quantidade, preco, preco_custo)
-    values (?, ?, ?, ?, ?, ?)
-    ''', (modelo, tamanho, fornecedor_id, quantidade, preco, preco_custo))
-
+    values (%s, %s, %s, %s, %s, %s)
+    ''',
+                   (modelo, tamanho, fornecedor_id, quantidade, preco, preco_custo))
     conexao.commit()
     print("Produto inserido com sucesso!")
 
@@ -27,17 +27,14 @@ def cadastrar_produto():
 def cadastrar_cliente():
     nome= input("Nome cliente: ")
     sobrenome= input("Sobrenome: ")
-    endereco= input("Endereco: ")
     cursor = conexao.cursor()
     cursor.execute('''
     insert into clientes
-    (nome, sobrenome, endereco)
-    values (?, ?, ?)
-    ''', (nome, sobrenome, endereco))
-
+    (nome, sobrenome)
+    values (%s, %s)
+    ''', (nome, sobrenome))
     conexao.commit()
     print('Cliente inserido com sucesso!')
-
 def listar_clientes():
     cursor = conexao.cursor()
     cursor.execute("SELECT * FROM clientes")
@@ -47,18 +44,19 @@ def listar_clientes():
 
 def excluir_cliente():
     cliente_id = int(input("Cliente ID: "))
-    cursor.execute("DELETE FROM clientes WHERE id = ?",(cliente_id,))
+    cursor.execute("DELETE FROM clientes WHERE id = %s",(cliente_id,))
     conexao.commit()
     print('Cliente excluido com sucesso!')
 
+#função fornecedor
 def cadastrar_fornecedor():
     nome = input("Nome fornecedor: ")
     cursor = conexao.cursor()
     cursor.execute('''
     insert into fornecedor
     (nome)
-    values (?)
-    ''', (nome,))
+    values (%s)
+    ''', (nome))
     conexao.commit()
     print('Fornecedor inserido com sucesso!')
 
@@ -73,7 +71,7 @@ def listar_fornecedor():
 
 def excluir_fornecedor():
     fornecedor_id = int(input("Fornecedor ID: "))
-    cursor.execute("DELETE FROM fornecedor WHERE id = ?", (fornecedor_id,))
+    cursor.execute("DELETE FROM fornecedor WHERE id = %s", (fornecedor_id,))
     conexao.commit()
     print('Fornecedor excluido com sucesso!')
 
@@ -126,7 +124,7 @@ while True:
             print('/n===== FORNECEDORES ====')
             print('1 - Cadastrar fornecedor')
             print('2 - listar fornecedor' )
-            print('3 - excluir fornecedor')
+            print('3 - excluir fornrcedor')
             print('4 - voltar')
             opcao = input('Escolha uma opcao: ')
             if opcao == '1':
@@ -143,4 +141,8 @@ while True:
         print('Sistema encerrado!')
         break
     else:
-        print('opção invalida!')
+        print('opço invalida!')
+
+
+
+
