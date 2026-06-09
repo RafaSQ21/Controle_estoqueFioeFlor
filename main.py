@@ -17,7 +17,7 @@ def cadastrar_produto():
     cursor.execute('''
     insert into estoque
     (modelo, tamanho, fornecedor_id, quantidade, preco, preco_custo)
-    values (%s, %s, %s, %s, %s, %s)
+    values (?, ?, ?, ?, ?, ?)
     ''',
                    (modelo, tamanho, fornecedor_id, quantidade, preco, preco_custo))
     conexao.commit()
@@ -31,7 +31,7 @@ def cadastrar_cliente():
     cursor.execute('''
     insert into clientes
     (nome, sobrenome)
-    values (%s, %s)
+    values (?, ?)
     ''', (nome, sobrenome))
     conexao.commit()
     print('Cliente inserido com sucesso!')
@@ -55,7 +55,7 @@ def cadastrar_fornecedor():
     cursor.execute('''
     insert into fornecedor
     (nome)
-    values (%s)
+    values (?)
     ''', (nome))
     conexao.commit()
     print('Fornecedor inserido com sucesso!')
@@ -71,7 +71,7 @@ def listar_fornecedor():
 
 def excluir_fornecedor():
     fornecedor_id = int(input("Fornecedor ID: "))
-    cursor.execute("DELETE FROM fornecedor WHERE id = %s", (fornecedor_id,))
+    cursor.execute("DELETE FROM fornecedor WHERE id = ?", (fornecedor_id,))
     conexao.commit()
     print('Fornecedor excluido com sucesso!')
 
@@ -142,7 +142,3 @@ while True:
         break
     else:
         print('opço invalida!')
-
-
-
-
