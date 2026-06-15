@@ -2,6 +2,7 @@ import sqlite3
 try:
     conexao= sqlite3.connect('fioeflor.db')
     cursor = conexao.cursor()
+
     print("Conectado ao banco")
 
     #TABELA ESTOQUE
@@ -34,6 +35,19 @@ try:
     nome TEXT NOT NULL
     )
     """)
+
+    #TABELA CAIXA
+    cursor.execute("""
+    CREATE TABLE if not exists caixa (
+        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+        produto_id INTEGER,
+        tipo TEXT NOT NULL,
+        quantidade INTEGER,
+        valor_total REAL,
+        data_movimentacao TEXT,
+        foreign key (produto_id) references estoque(id)
+        )
+        """)
     conexao.commit()
 except Exception as erro:
     print('erro', erro)
