@@ -25,7 +25,7 @@ def incluir_cliente():
 
     cursor.execute("""
         INSERT INTO clientes (nome, sobrenome, endereco)
-        VALUES (?, ?, ?)
+        VALUES (%s, %s, %s)
     """, (nome, sobrenome, endereco))
     conexao.commit()
 
@@ -42,7 +42,7 @@ def incluir_fornecedor():
 
     cursor.execute("""
         INSERT INTO fornecedor (nome)
-        VALUES (?)
+        VALUES (%s)
     """, (nome, ))
     conexao.commit()
     return redirect('/fornecedores')
@@ -60,7 +60,7 @@ def cadastrar_produto():
     cursor.execute('''
     INSERT INTO estoque
     (modelo, tamanho, fornecedor_id, quantidade, preco, preco_custo)
-    VALUES (?, ?, ?, ?, ?, ?)
+    VALUES (%s, %s, %s, %s, %s, %s)
     ''',
     (modelo, tamanho, fornecedor_id, quantidade, preco, preco_custo))
 
@@ -69,7 +69,7 @@ def cadastrar_produto():
 
 @app.route('/excluir/<int:id>', methods=['POST'])
 def excluir(id):
-    cursor.execute("DELETE FROM estoque WHERE id = ?", (id,))
+    cursor.execute("DELETE FROM estoque WHERE id = %s", (id,))
     conexao.commit()
     return redirect('/produtos')
 
@@ -118,7 +118,7 @@ def caixa_saida():
 
     cursor.execute("""
         INSERT INTO caixa (produto_id, tipo, quantidade, valor_total, data_movimentacao)
-        VALUES (NULL, 'SAIDA', 0, ?, date('now'))
+        VALUES (NULL, 'SAIDA', 0, %s, date('now'))
     """, (valor,))
 
     conexao.commit()
@@ -130,7 +130,7 @@ def vender():
     quantidade = int(request.form['quantidade'])
 
     # pega produto
-    cursor.execute("SELECT quantidade, preco FROM estoque WHERE id = ?", (produto_id,))
+    cursor.execute("SELECT quantidade, preco FROM estoque WHERE id = %s", (produto_id,))
     produto = cursor.fetchone()
 
     if not produto:
@@ -150,14 +150,14 @@ def vender():
 
     cursor.execute("""
         UPDATE estoque
-        SET quantidade = ?
-        WHERE id = ?
+        SET quantidade = %s
+        WHERE id = %s
     """, (novo_estoque, produto_id))
 
     # registra entrada no caixa
     cursor.execute("""
         INSERT INTO caixa (produto_id, tipo, quantidade, valor_total, data_movimentacao)
-        VALUES (?, 'ENTRADA', ?, ?, date('now'))
+        VALUES (%s, 'ENTRADA', %s, %s, date('now'))
     """, (produto_id, quantidade, valor_total))
 
     conexao.commit()

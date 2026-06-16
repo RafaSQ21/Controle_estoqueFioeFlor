@@ -19,7 +19,7 @@ def cadastrar_produto():
     cursor.execute('''
     insert into estoque
     (modelo, tamanho, fornecedor_id, quantidade, preco, preco_custo)
-    values (?, ?, ?, ?, ?, ?)
+    values (%s, %s, %s, %s, %s, %s)
     ''',
                    (modelo, tamanho, fornecedor_id, quantidade, preco, preco_custo))
     conexao.commit()
@@ -34,7 +34,7 @@ def cadastrar_cliente():
     cursor.execute('''
     insert into clientes
     (nome, sobrenome, endereco)
-    values (?, ?, ?)
+    values (%s, %s, %s)
     ''', (nome, sobrenome, endereco))
     conexao.commit()
     print('Cliente inserido com sucesso!')
@@ -51,7 +51,7 @@ def listar_clientes():
 
 def excluir_cliente():
     cliente_id = int(input("Cliente ID: "))
-    cursor.execute("DELETE FROM clientes WHERE id = ?",(cliente_id,))
+    cursor.execute("DELETE FROM clientes WHERE id = %s",(cliente_id,))
     conexao.commit()
     print('Cliente excluido com sucesso!')
 
@@ -61,7 +61,7 @@ def cadastrar_fornecedor():
     cursor = conexao.cursor()
     cursor.execute('''
     insert into fornecedor(nome)
-    values (?)
+    values (%s)
     ''', (nome,))
     conexao.commit()
     print('Fornecedor inserido com sucesso!')
@@ -78,7 +78,7 @@ def listar_fornecedor():
 
 def excluir_fornecedor():
     fornecedor_id = int(input("Fornecedor ID: "))
-    cursor.execute("DELETE FROM fornecedor WHERE id = ?", (fornecedor_id,))
+    cursor.execute("DELETE FROM fornecedor WHERE id = %s", (fornecedor_id,))
     conexao.commit()
     print('Fornecedor excluido com sucesso!')
 
@@ -90,7 +90,7 @@ def registrar_venda():
     cursor.execute('''
     select quantidade, preco
     from estoque
-    where id = ?
+    where id = %s
     ''', (produto_id,))
 
     produto = cursor.fetchone()
@@ -107,14 +107,14 @@ def registrar_venda():
     total = preco * quantidade
     cursor.execute('''
     UPDATE estoque
-    SET quantidade = quantidade - ?
-    WHERE id = ?
+    SET quantidade = quantidade - %s
+    WHERE id = %s
     ''', (quantidade, produto_id))
 
     cursor.execute('''
     insert into Caixa
     (produto_id, tipo, quantidade, valor_total, data_movimentacao)
-    values (?, 'ENTRADA', ?, ?, date('now'))
+    values (%s, 'ENTRADA', %s, %s, date('now'))
     ''', (produto_id, quantidade, total))
     conexao.commit()
     print(f'Venda registrada! Total: R$ {total:.2f}')
@@ -127,8 +127,8 @@ def entrada_mercadoria():
 
     cursor.execute('''
     update estoque
-    set quantidade = quantidade + ?
-    where id = ?
+    set quantidade = quantidade + %s
+    where id = %s
     ''', (quantidade, produto_id))
     conexao.commit()
     print('Mercadoria adcionada ao estoque!')
@@ -142,7 +142,7 @@ def retirar_caixa():
     cursor.execute('''
     INSERT INTO caixa
     (produto_id, tipo, quantidade, valor_total, data_movimentacao)
-    values (null, 'SAIDA',0,?,date('now'))
+    values (null, 'SAIDA',0,%s,date('now'))
     ''', (valor,))
     conexao.commit()
     print('Caixa retirada!')
