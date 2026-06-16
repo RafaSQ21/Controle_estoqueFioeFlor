@@ -1,6 +1,6 @@
 import sqlite3
 try:
-    conexao= sqlite3.connect('fioeflor.db')
+    conexao= sqlite3.connect('fioeflor.db', check_same_thread=False)
     cursor = conexao.cursor()
 
     print("Conectado ao banco")

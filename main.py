@@ -2,11 +2,12 @@ from banco import *
 cursor.execute("UPDATE caixa SET tipo='ENTRADA' WHERE tipo='Entrada'")
 conexao.commit()
 def listar_produtos():
-    cursor = conexao.cursor()
     cursor.execute("SELECT * FROM estoque")
-    print('\n=== PRODUTOS CADASTRADOS===')
-    for produto in cursor.fetchall():
-        print(produto)
+    produtos = cursor.fetchall()
+    print('\nID | Modelo | Tamanho | Fornecedor | Quantidade | Preço | Preço Custo')
+    print('-' * 90)
+    for produto in produtos:
+        print(f'{produto[0]} | {produto[1]} | {produto[2]} | {produto[3]} | {produto[4]} | R$ {produto[5]:.2f} | R$ {produto[6]:.2f}')
 
 def cadastrar_produto():
     modelo= input("Modelo: ")
@@ -28,21 +29,25 @@ def cadastrar_produto():
 def cadastrar_cliente():
     nome= input("Nome cliente: ")
     sobrenome= input("Sobrenome: ")
+    endereco= input('Endereço')
     cursor = conexao.cursor()
     cursor.execute('''
     insert into clientes
-    (nome, sobrenome)
-    values (?, ?)
-    ''', (nome, sobrenome))
+    (nome, sobrenome, endereco)
+    values (?, ?, ?)
+    ''', (nome, sobrenome, endereco))
     conexao.commit()
     print('Cliente inserido com sucesso!')
 
 def listar_clientes():
-    cursor = conexao.cursor()
-    cursor.execute("SELECT * FROM clientes")
-    print('\n=== CLIENTES CADASTRADOS===')
-    for clientes in cursor.fetchall():
-        print(clientes)
+    cursor.execute("select * from clientes")
+    clientes = cursor.fetchall()
+
+    print('ID | Nome | Sobrenome | Endereço')
+    print('-' * 60)
+
+    for cliente in clientes:
+        print(f'{cliente[0]} | {cliente[1]} | {cliente[2]} | {cliente[3]}')
 
 def excluir_cliente():
     cliente_id = int(input("Cliente ID: "))
@@ -63,11 +68,12 @@ def cadastrar_fornecedor():
 
 
 def listar_fornecedor():
-    cursor = conexao.cursor()
     cursor.execute("SELECT * FROM fornecedor")
-    print('\n=== FORNECEDORES CADASTRADOS===')
-    for fornecedor in cursor.fetchall():
-        print(fornecedor)
+    forenecedor = cursor.fetchall()
+    print('\nID | Nome')
+    print('-' * 70)
+    for fornecedor in forenecedor:
+        print(f'{fornecedor[0]} | {fornecedor[1]}')
 
 
 def excluir_fornecedor():
